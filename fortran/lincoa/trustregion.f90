@@ -116,6 +116,7 @@ real(RP) :: reduct
 real(RP) :: resact(size(amat, 2))
 real(RP) :: resid
 real(RP) :: resnew(size(amat, 2))
+integer(IK) :: resnew_(size(amat, 2))
 real(RP) :: restmp(size(amat, 2))
 real(RP) :: sold(size(s))
 real(RP) :: sqrtd
@@ -283,9 +284,11 @@ do iter = 1, maxiter  ! Powell's code is essentially a DO WHILE loop. We impose 
 
                 ! Reduce GAMMA so that the move along DPROJ also satisfies the linear constraints.
                 ad = -ONE
-                ad(trueloc(resnew > 0)) = matprod(dproj, amat(:, trueloc(resnew > 0)))
+                resnew_ = trueloc(resnew > 0)
+                ad(resnew_) = matprod(dproj, amat(:, resnew_))
                 frac = ONE
-                restmp(trueloc(ad > 0)) = resnew(trueloc(ad > 0)) - matprod(psd, amat(:, trueloc(ad > 0)))
+                resnew_ = trueloc(ad > 0)
+                restmp(resnew_) = resnew(resnew_) - matprod(psd, amat(:, resnew_))
                 frac(trueloc(ad > 0)) = restmp(trueloc(ad > 0)) / ad(trueloc(ad > 0))
                 gamma = minval([gamma, ONE, frac])  ! GAMMA = MINVAL([GAMMA, ONE, FRAC(TRUELOC(AD>0))])
             end if
@@ -351,7 +354,8 @@ do iter = 1, maxiter  ! Powell's code is essentially a DO WHILE loop. We impose 
     ! Make a further reduction in ALPHA if necessary to preserve feasibility.
     alphm = alpha
     ad = -ONE
-    ad(trueloc(resnew > 0)) = matprod(d, amat(:, trueloc(resnew > 0)))
+    resnew_ = trueloc(resnew > 0)
+    ad(trueloc(resnew > 0)) = matprod(d, amat(:, resnew_))
     frac = alpha
     frac(trueloc(ad > 0)) = resnew(trueloc(ad > 0)) / ad(trueloc(ad > 0))
     frac(trueloc(is_nan(frac))) = alpha
