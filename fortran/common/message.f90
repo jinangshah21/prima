@@ -66,6 +66,7 @@ integer(IK), parameter :: valid_exit_flags(11) = [FTARGET_ACHIEVED, MAXFUN_REACH
     & NO_SPACE_BETWEEN_BOUNDS, ZERO_LINEAR_CONSTRAINT]
 logical :: is_constrained
 real(RP) :: cstrv_loc
+real(RP), allocatable :: tmp_constr(:)
 
 ! Preconditions
 if (DEBUGGING) then
@@ -96,7 +97,10 @@ end if
 if (present(cstrv)) then
     cstrv_loc = cstrv
 elseif (present(constr)) then
-    cstrv_loc = maximum([ZERO, -constr])  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    allocate(tmp_constr(size(constr) + 1))
+    tmp_constr = [ZERO, -constr]
+    cstrv_loc = maximum(tmp_constr)  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    deallocate(tmp_constr)
 else
     cstrv_loc = ZERO
 end if
@@ -219,6 +223,7 @@ character(len=:), allocatable :: x_message
 integer :: funit ! Logical unit for the writing. Should be an integer of default kind.
 logical :: is_constrained
 real(RP) :: cstrv_loc
+real(RP), allocatable :: tmp_constr(:)
 
 !====================!
 ! Calculation starts !
@@ -244,7 +249,10 @@ end if
 if (present(cstrv)) then
     cstrv_loc = cstrv
 elseif (present(constr)) then
-    cstrv_loc = maximum([ZERO, -constr])  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    allocate(tmp_constr(size(constr) + 1))
+    tmp_constr = [ZERO, -constr]
+    cstrv_loc = maximum(tmp_constr)  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    deallocate(tmp_constr)
 else
     cstrv_loc = ZERO
 end if
@@ -386,6 +394,7 @@ character(len=:), allocatable :: x_message
 integer :: funit ! Logical unit for the writing. Should be an integer of default kind.
 logical :: is_constrained
 real(RP) :: cstrv_loc
+real(RP), allocatable :: tmp_constr(:)
 
 !====================!
 ! Calculation starts !
@@ -411,7 +420,10 @@ end if
 if (present(cstrv)) then
     cstrv_loc = cstrv
 elseif (present(constr)) then
-    cstrv_loc = maximum([ZERO, -constr])  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    allocate(tmp_constr(size(constr) + 1))
+    tmp_constr = [ZERO, -constr]
+    cstrv_loc = maximum(tmp_constr)  ! N.B.: We assume that the constraint is CONSTR >= 0.
+    deallocate(tmp_constr)
 else
     cstrv_loc = ZERO
 end if
