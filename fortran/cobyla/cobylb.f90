@@ -975,7 +975,7 @@ if (any(cmin < HALF * cmax) .and. fmin < fmax) then
     ! Powell mentioned the following alternative in Section 4 of his COBYLA paper. According to a
     ! test on 20230610, it does not make much difference to the performance.
     ! !denom = maxval(max(cmax, ZERO) - cmin, mask=(cmin < HALF * cmax))
-    r = (fmax - fmin) / denom
+    r = (fmax - fmin)
 end if
 
 !====================!
